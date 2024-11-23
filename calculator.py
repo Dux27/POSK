@@ -1,4 +1,5 @@
 import tkinter as tk
+from time import strftime
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -7,7 +8,11 @@ class MainApplication(tk.Frame):
         
         # Optional: Configure the root window (parent)
         self.parent.title("Main Application")  # Set the window title
-        self.parent.geometry("500x300")       # Set the default window size
+        self.parent.geometry("600x300")       # Set the default window size
+
+        self.lbl = tk.Label(self, font=('calibri', 20, 'bold'), foreground='black')
+        self.lbl.pack(side="right", anchor='ne', padx=10, pady=10)
+        self.update_time()
 
         # Create a Label
         self.label = tk.Label(self, text="Hello, World!")
@@ -16,6 +21,11 @@ class MainApplication(tk.Frame):
         # Create a Button
         self.button = tk.Button(self, text="Click Me", command=self.on_button_click)
         self.button.pack(pady=10)
+        
+    def update_time(self):
+        string = strftime('%H:%M:%S')  
+        self.lbl.config(text=string)    # Update the label with the time
+        self.lbl.after(1000, self.update_time)
     
     # This method is triggered when the button is clicked
     def on_button_click(self):
