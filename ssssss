@@ -11,26 +11,25 @@ class Kalkulator:
         self.rezultat = tk.Text(self.root, height=2, width=18, font=("Arial Black", 20))
         self.rezultat.grid(columnspan=5)
         
-        # Tworzymy przyciski kalkulatora
+        # Tworzymy przyciski
         self.stworz_przyciski()
 
     def stworz_przyciski(self):
         # Lista przycisków i ich układ w grid
         przyciski = [
-            ("1", 2, 1), ("2", 2, 2), ("3", 2, 3),
-            ("4", 3, 1), ("5", 3, 2), ("6", 3, 3),
-            ("7", 4, 1), ("8", 4, 2), ("9", 4, 3),
+            ("1", 2, 1), ("2", 2, 2), ("3", 2, 3), 
+            ("4", 3, 1), ("5", 3, 2), ("6", 3, 3), 
+            ("7", 4, 1), ("8", 4, 2), ("9", 4, 3), 
             ("0", 5, 1), ("+", 2, 4), ("-", 3, 4),
-            ("*", 4, 4), ("/", 5, 4), ("(", 5, 2),
+            ("*", 4, 4), ("/", 5, 4), ("(", 5, 2), 
             (")", 5, 3), ("=", 6, 3, 2), ("C", 6, 1, 2)
         ]
         
-        # Tworzymy przyciski
+        # Iterujemy po przyciskach i tworzymy je
         for (tekst, wiersz, kolumna, *colspan) in przyciski:
-            colspan_value = colspan[0] if colspan else 1  # Jeśli brak colspan, ustawiamy na 1
-            self.stworz_przycisk(tekst, wiersz, kolumna, colspan_value)
+            self.stworz_przycisk(tekst, wiersz, kolumna, colspan)
 
-    def stworz_przycisk(self, tekst, wiersz, kolumna, colspan=1):
+    def stworz_przycisk(self, tekst, wiersz, kolumna, colspan=[1]):
         # Przycisk "=" (obliczenia)
         if tekst == "=":
             przycisk = tk.Button(self.root, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
@@ -42,7 +41,7 @@ class Kalkulator:
             przycisk = tk.Button(self.root, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
         
         # Ustawiamy pozycję przycisku w gridzie
-        przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
+        przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan[0])
 
     def zmiana_wyniku(self, znak):
         # Dodaje kliknięty znak do wyniku
@@ -66,7 +65,6 @@ class Kalkulator:
         self.wynik = ""
         self.rezultat.delete(1.0, "end")
 
-
 def main():
     # Tworzymy główne okno aplikacji
     root = tk.Tk()
@@ -75,4 +73,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
