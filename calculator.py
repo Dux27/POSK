@@ -7,7 +7,7 @@ class MainApplication(tk.Frame):
         
         # Optional: Configure the root window (parent)
         self.parent.title("Main Application")  # Set the window title
-        self.parent.geometry("400x300")       # Set the default window size
+        self.parent.geometry("500x300")       # Set the default window size
 
         # Create a Label
         self.label = tk.Label(self, text="Hello, World!")
