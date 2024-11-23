@@ -27,3 +27,5 @@ if __name__ == "__main__":
     root = tk.Tk() # Create the root window
     MainApplication(root).pack(side="top", fill="both", expand=True) # Create the MainApplication frame and add it to the root window
     root.mainloop() # Start the Tkinter event loop
+
+    # test
