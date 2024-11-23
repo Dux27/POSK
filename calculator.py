@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 class Kalkulator:
     def __init__(self, root):
@@ -22,7 +23,8 @@ class Kalkulator:
             ("7", 4, 1), ("8", 4, 2), ("9", 4, 3),
             ("0", 5, 1), ("+", 2, 4), ("-", 3, 4),
             ("*", 4, 4), ("/", 5, 4), ("(", 5, 2),
-            (")", 5, 3), ("=", 6, 3, 2), ("C", 6, 1, 2)
+            (")", 5, 3), ("=", 6, 2, 2), ("C", 6, 1),
+            (".", 6, 4)
         ]
         
         # Tworzymy przyciski
@@ -36,7 +38,7 @@ class Kalkulator:
             przycisk = tk.Button(self.root, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
         # Przycisk "C" (czyszczenie)
         elif tekst == "C":
-            przycisk = tk.Button(self.root, text=tekst, command=self.wyczysc, width=12, font=("Arial", 16))
+            przycisk = tk.Button(self.root, text=tekst, command=self.wyczysc, width=5, font=("Arial", 16))
         # Inne przyciski (cyfry i operatory)
         else:
             przycisk = tk.Button(self.root, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
