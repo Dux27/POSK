@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox
 
 from time import *
 import math
@@ -24,13 +24,30 @@ class MainFrame(tk.Frame):
         icon_image = tk.PhotoImage(file=self.icon_path)
         self.parent.iconphoto(True, icon_image)
         
+        self.parent.bind("<Key>", self.handle_keypress)
+        
         self.stworz_pole_tekstowe()
         self.stworz_przyciski()
+    
+    def handle_keypress(self, event):
+        print(f"Key pressed: {event.char}")  # Debugging 
+        valid_keys = "0123456789+-*/.()"
+        
+        if event.char in valid_keys:
+            self.zmiana_wyniku(event.char)
+        elif event.keysym == "BackSpace":
+            self.wynik = self.wynik[:-1]
+            self.rezultat.delete(1.0, "end")
+            self.rezultat.insert(1.0, self.wynik)
+        elif event.keysym == "Return":
+            self.podsumuj() 
     
     def stworz_pole_tekstowe(self):
         self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20), bg="#F5F5F5")
         self.rezultat.grid(columnspan=5, pady=10)
         self.wynik = ""
+
+        self.rezultat.focus_set()
         
     def stworz_przyciski(self):
         self.buttons = []
@@ -61,14 +78,17 @@ class MainFrame(tk.Frame):
 
     def zmiana_wyniku(self, znak):
         self.wynik += str(znak)
+        print(f"Current expression: {self.wynik}")  # Debugging line
         self.rezultat.delete(1.0, "end")
         self.rezultat.insert(1.0, self.wynik)
 
     def podsumuj(self):
         try:
-            self.wynik = str(eval(self.wynik))  
-            self.rezultat.delete(1.0, "end")
-            self.rezultat.insert(1.0, self.wynik)
+            expression = self.wynik.strip()
+
+            self.wynik = str(eval(expression))  
+            self.rezultat.delete(1.0, "end")  # Clear the Text widget
+            self.rezultat.insert(1.0, self.wynik)  # Insert the evaluated result
         except:
             self.clear()
             self.rezultat.insert(1.0, "Error")
