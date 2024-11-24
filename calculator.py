@@ -19,18 +19,13 @@ class Main(tk.Frame):
         
         self.stworz_przyciski()
         
-        self.inicialize_digital_clock()
-        self.inicialize_analog_clock()
-
     def stworz_przyciski(self):
         przyciski = [
-            ("1", 2, 1), ("2", 2, 2), ("3", 2, 3),
-            ("4", 3, 1), ("5", 3, 2), ("6", 3, 3),
-            ("7", 4, 1), ("8", 4, 2), ("9", 4, 3),
-            ("0", 5, 1), ("+", 2, 4), ("-", 3, 4),
-            ("*", 4, 4), ("/", 5, 4), ("(", 5, 2),
-            (")", 5, 3), ("=", 6, 2, 2), ("C", 6, 1),
-            (".", 6, 4)
+            ("1", 2, 1), ("2", 2, 2),   ("3", 2, 3), ("+", 2, 4),
+            ("4", 3, 1), ("5", 3, 2),   ("6", 3, 3), ("-", 3, 4),
+            ("7", 4, 1), ("8", 4, 2),   ("9", 4, 3), ("*", 4, 4),
+            ("0", 5, 1), ("(", 5, 2),   (")", 5, 3), ("/", 5, 4),
+            (".", 6, 1), ("=", 6, 2, 2),             ("C", 6, 4),
         ]
         
         for (tekst, wiersz, kolumna, *colspan) in przyciski:
@@ -40,12 +35,14 @@ class Main(tk.Frame):
     def stworz_przycisk(self, tekst, wiersz, kolumna, colspan=1):
         if tekst == "=":
             przycisk = tk.Button(self, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
+            przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
         elif tekst == "C":
             przycisk = tk.Button(self, text=tekst, command=self.clear, width=5, font=("Arial", 16))
+            przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)          
         else:
             przycisk = tk.Button(self, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
+            przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
         
-        przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
 
     def zmiana_wyniku(self, znak):
         self.wynik += str(znak)
@@ -65,11 +62,17 @@ class Main(tk.Frame):
         self.wynik = ""
         self.rezultat.delete(1.0, "end")        
 
-    
+class ClockFrame(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        
+        self.inicialize_analog_clock()        
+               
+                          
     ### DIGITAL CLOCK FUNCTIONS
     def inicialize_digital_clock(self):
         self.digitalTimer = ttk.Label(self, font=('calibri', 30, 'bold'), foreground='black')
-        self.digitalTimer.pack(side="top", anchor='center')
+        self.digitalTimer.pack(pady=20)
         self.update_digital_timer()
     
     def update_digital_timer(self):
@@ -80,8 +83,9 @@ class Main(tk.Frame):
    
     ### ANALOG CLOCK FUNCTIONS
     def inicialize_analog_clock(self):
-        self.x = 320    
-        self.y = 320
+        self.canvas_size = 150
+        self.x = self.canvas_size / 2
+        self.y = self.canvas_size / 2
         self.stickLength = 50
         self.stickLengths = [self.stickLength * 0.7, self.stickLength * 0.9, self.stickLength]
         self.stickWidth = 5
@@ -92,16 +96,16 @@ class Main(tk.Frame):
         self.update_analog_timer()
     
     def create_clock_canvas(self):
-        self.clockCanvas = tk.Canvas(self)
-        self.clockCanvas.pack(expand=True, fill='both')
+        self.clockCanvas = tk.Canvas(self, height=self.canvas_size, width=self.canvas_size)
+        self.clockCanvas.pack(pady=20)
     
     def create_clock_face(self):
         try:
             self.clockFaceImg = tk.PhotoImage(file="img/clock150.png")
-            self.clockCanvas.create_image(320, 320, image=self.clockFaceImg)   
+            self.clockCanvas.create_image(self.x, self.y, image=self.clockFaceImg)   
         except tk.TclError as e:
             print(f"Error loading image: {e}")
-            self.clockCanvas.create_text(150, 150, text="Image not found", fill="red")     
+            self.clockCanvas.create_text(self.x, self.y, text="Image not found", fill="red")     
     
     def create_sticks(self):
         self.sticks = []
@@ -134,5 +138,11 @@ class Main(tk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk() 
-    Main(root).pack(side="top", fill="both", expand=True)
+    
+    main_frame = Main(root)
+    main_frame.pack(side="left", padx=10)
+
+    clock_frame = ClockFrame(root)
+    clock_frame.pack(side="right", padx=10)
+    
     root.mainloop()
