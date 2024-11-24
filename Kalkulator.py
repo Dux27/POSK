@@ -176,6 +176,8 @@ class MenuBar(tk.Menu):
         self.create_help_menu()
         
         self.parent.config(menu=self)
+        
+        self.active_skin = ""
 
     def create_options_menu(self):
         options_menu = tk.Menu(self, tearoff=0)
@@ -197,6 +199,7 @@ class MenuBar(tk.Menu):
         self.add_cascade(label="Options", menu=options_menu)
         
     def change_skin_lightblue(self):
+        self.active_skin = "sky"
         self.parent.configure(bg="lightblue")
         clock_frame.configure(bg="lightblue")
         main_frame.configure(bg="lightblue")
@@ -206,6 +209,7 @@ class MenuBar(tk.Menu):
         messagebox.showinfo("Skin Changed", "The skin has been changed to Sky!")
 
     def change_skin_white(self):
+        self.active_skin = "white"
         self.parent.configure(bg="white")
         clock_frame.configure(bg="white")
         main_frame.configure(bg="white")
@@ -215,6 +219,7 @@ class MenuBar(tk.Menu):
         messagebox.showinfo("Skin Changed", "The skin has been changed to White!")
         
     def change_skin_dark(self):
+        self.active_skin = "dark"
         self.parent.configure(bg="gray10")
         clock_frame.configure(bg="gray10")
         main_frame.configure(bg="gray10")
@@ -231,6 +236,12 @@ class MenuBar(tk.Menu):
     def change_clock_digital(self):
         clock_frame.clock = "digital"
         clock_frame.choose_clock(clock_frame.clock)
+        if self.active_skin == "sky":
+            clock_frame.digitalTimer.configure(bg="lightblue", foreground="white")
+        elif self.active_skin == "dark":
+            clock_frame.digitalTimer.configure(bg="gray10", foreground="lightgrey")
+        else:
+            clock_frame.digitalTimer.configure(bg="white", foreground="black")
         messagebox.showinfo("Clock Changed", "The clock has been changed to digital!")
     
     def exit_app(self):
