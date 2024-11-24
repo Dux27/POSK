@@ -1,21 +1,22 @@
 import tkinter as tk
-from tkinter import ttk
 
 from time import *
 import math
 
-class Main(tk.Frame):
+
+class MainFrame(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         
         self.parent.title("Kalkulator")  
-        self.parent.geometry("500x300")  
+        self.parent.geometry("520x365")  
+        self.parent.resizable(False, False)
         
         self.wynik = ""
         
-        self.rezultat = tk.Text(self, height=2, width=18, font=("Arial Black", 20))
-        self.rezultat.grid(columnspan=5)
+        self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20))
+        self.rezultat.grid(columnspan=5, pady=10)
         
         self.stworz_przyciski()
         
@@ -35,13 +36,12 @@ class Main(tk.Frame):
     def stworz_przycisk(self, tekst, wiersz, kolumna, colspan=1):
         if tekst == "=":
             przycisk = tk.Button(self, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
-            przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
         elif tekst == "C":
-            przycisk = tk.Button(self, text=tekst, command=self.clear, width=5, font=("Arial", 16))
-            przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)          
+            przycisk = tk.Button(self, text=tekst, command=self.clear, width=5, font=("Arial", 16))          
         else:
             przycisk = tk.Button(self, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
-            przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
+        
+        przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan, padx=5, pady=5)
         
 
     def zmiana_wyniku(self, znak):
@@ -62,6 +62,7 @@ class Main(tk.Frame):
         self.wynik = ""
         self.rezultat.delete(1.0, "end")        
 
+
 class ClockFrame(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
@@ -71,7 +72,7 @@ class ClockFrame(tk.Frame):
                           
     ### DIGITAL CLOCK FUNCTIONS
     def inicialize_digital_clock(self):
-        self.digitalTimer = ttk.Label(self, font=('calibri', 30, 'bold'), foreground='black')
+        self.digitalTimer = tk.Label(self, font=('calibri', 30, 'bold'), foreground='black')
         self.digitalTimer.pack(pady=20)
         self.update_digital_timer()
     
@@ -97,7 +98,7 @@ class ClockFrame(tk.Frame):
     
     def create_clock_canvas(self):
         self.clockCanvas = tk.Canvas(self, height=self.canvas_size, width=self.canvas_size)
-        self.clockCanvas.pack(pady=20)
+        self.clockCanvas.pack(pady=8)
     
     def create_clock_face(self):
         try:
@@ -139,10 +140,10 @@ class ClockFrame(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk() 
     
-    main_frame = Main(root)
-    main_frame.pack(side="left", padx=10)
+    main_frame = MainFrame(root)
+    main_frame.pack(side="left", padx=10, anchor="n")
 
     clock_frame = ClockFrame(root)
-    clock_frame.pack(side="right", padx=10)
+    clock_frame.pack(side="right", padx=10, anchor="n")
     
     root.mainloop()
