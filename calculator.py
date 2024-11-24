@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 
 from time import *
 import math
@@ -16,15 +16,20 @@ class MainFrame(tk.Frame):
         self.parent.configure(bg="white")
         self.configure(bg="white")
         
+        icon_image = tk.PhotoImage(file="img/calculator_icon3.png")
+        self.parent.iconphoto(True, icon_image)
+        
         self.stworz_pole_tekstowe()
         self.stworz_przyciski()
     
     def stworz_pole_tekstowe(self):
-        self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20))
+        self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20), bg="lightgrey")
         self.rezultat.grid(columnspan=5, pady=10)
         self.wynik = ""
         
     def stworz_przyciski(self):
+        self.buttons = []
+        
         przyciski = [
             ("1", 2, 1), ("2", 2, 2),   ("3", 2, 3), ("+", 2, 4),
             ("4", 3, 1), ("5", 3, 2),   ("6", 3, 3), ("-", 3, 4),
@@ -45,6 +50,7 @@ class MainFrame(tk.Frame):
         else:
             przycisk = tk.Button(self, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
         
+        self.buttons.append(przycisk)
         przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan, padx=5, pady=5)
         
 
@@ -60,11 +66,15 @@ class MainFrame(tk.Frame):
             self.rezultat.insert(1.0, self.wynik)
         except:
             self.clear()
-            self.rezultat.insert(1.0, "Wystąpił Błąd!!!")
+            self.rezultat.insert(1.0, "Error")
 
     def clear(self):
         self.wynik = ""
         self.rezultat.delete(1.0, "end")        
+        
+    def change_button_color(self, color: str):
+        for b in self.buttons:
+            b.configure(bg=color)
 
 
 class ClockFrame(tk.Frame):
@@ -104,7 +114,7 @@ class ClockFrame(tk.Frame):
     
     def create_clock_canvas(self):
         self.clockCanvas = tk.Canvas(self, height=self.canvas_size, width=self.canvas_size, background="white")
-        self.clockCanvas.pack(pady=8)
+        self.clockCanvas.pack(pady=10)
     
     def create_clock_face(self):
         try:
@@ -157,8 +167,8 @@ class MenuBar(tk.Menu):
         options_menu = tk.Menu(self, tearoff=0)
         
         skin_menu = tk.Menu(options_menu, tearoff=0)
-        skin_menu.add_command(label="Night mode", command=self.change_skin_dark)
-        skin_menu.add_command(label="Light mode", command=self.change_skin_light)
+        skin_menu.add_command(label="White", command=self.change_skin_white)
+        skin_menu.add_command(label="Sky", command=self.change_skin_lightblue)
         
         options_menu.add_cascade(label="Change Skin", menu=skin_menu)
         options_menu.add_separator()
@@ -166,13 +176,23 @@ class MenuBar(tk.Menu):
         
         self.add_cascade(label="Options", menu=options_menu)
 
-    def change_skin_dark(self):
-        self.parent.configure(bg="black")
-        messagebox.showinfo("Skin Changed", "The skin has been changed to Night Mode!")
+    def change_skin_lightblue(self):
+        self.parent.configure(bg="lightblue")
+        clock_frame.configure(bg="lightblue")
+        main_frame.configure(bg="lightblue")
+        main_frame.change_button_color("white")
+        main_frame.rezultat.configure(bg="white")
+        
+        messagebox.showinfo("Skin Changed", "The skin has been changed to Lightblue!")
 
-    def change_skin_light(self):
+    def change_skin_white(self):
         self.parent.configure(bg="white")
-        messagebox.showinfo("Skin Changed", "The skin has been changed to Light Mode!")
+        clock_frame.configure(bg="white")
+        main_frame.configure(bg="white")
+        main_frame.change_button_color("lightgrey")
+        main_frame.rezultat.configure(bg="lightgrey")
+        
+        messagebox.showinfo("Skin Changed", "The skin has been changed to White!")
     
     def exit_app(self):
         self.parent.quit()
