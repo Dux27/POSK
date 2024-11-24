@@ -30,7 +30,7 @@ class MainFrame(tk.Frame):
         self.stworz_przyciski()
     
     def handle_keypress(self, event):
-        print(f"Key pressed: {event.char}")  # Debugging 
+        # print(f"Key pressed: {event.char}")  # Debugging 
         valid_keys = "0123456789+-*/.()"
         
         if event.char in valid_keys:
@@ -78,7 +78,7 @@ class MainFrame(tk.Frame):
 
     def zmiana_wyniku(self, znak):
         self.wynik += str(znak)
-        print(f"Current expression: {self.wynik}")  # Debugging line
+        # print(f"Current expression: {self.wynik}")  # Debugging line
         self.rezultat.delete(1.0, "end")
         self.rezultat.insert(1.0, self.wynik)
 
