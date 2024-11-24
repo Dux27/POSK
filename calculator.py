@@ -1,15 +1,17 @@
 import tkinter as tk
-from tkinter import ttk
 
-class Kalkulator:
-    def __init__(self, root):
-        self.root = root
-        self.root.geometry("500x300")
+class Main(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
+        
+        self.parent.title("Kalkulator")  
+        self.parent.geometry("500x300")  
         
         self.wynik = ""
         
         # Tworzymy pole tekstowe do wyświetlania wyniku
-        self.rezultat = tk.Text(self.root, height=2, width=18, font=("Arial Black", 20))
+        self.rezultat = tk.Text(self, height=2, width=18, font=("Arial Black", 20))
         self.rezultat.grid(columnspan=5)
         
         # Tworzymy przyciski kalkulatora
@@ -35,13 +37,13 @@ class Kalkulator:
     def stworz_przycisk(self, tekst, wiersz, kolumna, colspan=1):
         # Przycisk "=" (obliczenia)
         if tekst == "=":
-            przycisk = tk.Button(self.root, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
+            przycisk = tk.Button(self, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
         # Przycisk "C" (czyszczenie)
         elif tekst == "C":
-            przycisk = tk.Button(self.root, text=tekst, command=self.wyczysc, width=5, font=("Arial", 16))
+            przycisk = tk.Button(self, text=tekst, command=self.wyczysc, width=5, font=("Arial", 16))
         # Inne przyciski (cyfry i operatory)
         else:
-            przycisk = tk.Button(self.root, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
+            przycisk = tk.Button(self, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
         
         # Ustawiamy pozycję przycisku w gridzie
         przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
@@ -69,12 +71,7 @@ class Kalkulator:
         self.rezultat.delete(1.0, "end")
 
 
-def main():
-    # Tworzymy główne okno aplikacji
-    root = tk.Tk()
-    kalkulator = Kalkulator(root)  # Tworzymy obiekt kalkulatora
-    root.mainloop()  # Uruchamiamy główną pętlę GUI
-
 if __name__ == "__main__":
-    main()
-    
+    root = tk.Tk()
+    Main(root).pack(side="top", fill="both", expand=True)
+    root.mainloop()
