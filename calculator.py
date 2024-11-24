@@ -18,7 +18,6 @@ class Main(tk.Frame):
         self.stworz_przyciski()
 
     def stworz_przyciski(self):
-        # Lista przycisków i ich układ w grid
         przyciski = [
             ("1", 2, 1), ("2", 2, 2), ("3", 2, 3),
             ("4", 3, 1), ("5", 3, 2), ("6", 3, 3),
@@ -29,44 +28,35 @@ class Main(tk.Frame):
             (".", 6, 4)
         ]
         
-        # Tworzymy przyciski
         for (tekst, wiersz, kolumna, *colspan) in przyciski:
             colspan_value = colspan[0] if colspan else 1  # Jeśli brak colspan, ustawiamy na 1
             self.stworz_przycisk(tekst, wiersz, kolumna, colspan_value)
 
     def stworz_przycisk(self, tekst, wiersz, kolumna, colspan=1):
-        # Przycisk "=" (obliczenia)
         if tekst == "=":
             przycisk = tk.Button(self, text=tekst, command=self.podsumuj, width=12, font=("Arial", 16))
-        # Przycisk "C" (czyszczenie)
         elif tekst == "C":
-            przycisk = tk.Button(self, text=tekst, command=self.wyczysc, width=5, font=("Arial", 16))
-        # Inne przyciski (cyfry i operatory)
+            przycisk = tk.Button(self, text=tekst, command=self.clear, width=5, font=("Arial", 16))
         else:
             przycisk = tk.Button(self, text=tekst, command=lambda znak=tekst: self.zmiana_wyniku(znak), width=5, font=("Arial", 16))
         
-        # Ustawiamy pozycję przycisku w gridzie
         przycisk.grid(row=wiersz, column=kolumna, columnspan=colspan)
 
     def zmiana_wyniku(self, znak):
-        # Dodaje kliknięty znak do wyniku
         self.wynik += str(znak)
         self.rezultat.delete(1.0, "end")
         self.rezultat.insert(1.0, self.wynik)
 
     def podsumuj(self):
-        # Oblicza wynik
         try:
-            self.wynik = str(eval(self.wynik))  # Używamy eval do obliczeń
+            self.wynik = str(eval(self.wynik))  
             self.rezultat.delete(1.0, "end")
             self.rezultat.insert(1.0, self.wynik)
         except:
-            # Obsługuje błędy (np. nieprawidłowe wyrażenie)
-            self.wyczysc()
+            self.clear()
             self.rezultat.insert(1.0, "Wystąpił Błąd!!!")
 
-    def wyczysc(self):
-        # Czyści wynik
+    def clear(self):
         self.wynik = ""
         self.rezultat.delete(1.0, "end")
 
