@@ -3,6 +3,7 @@ from tkinter import messagebox, ttk
 
 from time import *
 import math
+import os
 
 
 class MainFrame(tk.Frame):
@@ -11,19 +12,23 @@ class MainFrame(tk.Frame):
         self.parent = parent
         
         self.parent.title("Kalkulator")  
-        self.parent.geometry("520x365")  
+        self.parent.geometry("525x365")  
         self.parent.resizable(False, False)
         self.parent.configure(bg="white")
         self.configure(bg="white")
         
-        icon_image = tk.PhotoImage(file="img/calculator_icon3.png")
+        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.image_path = os.path.join(self.current_dir, "assets", "clock150.png")
+        self.icon_path = os.path.join(self.current_dir, "assets", "KalKulator_icon.png")
+        
+        icon_image = tk.PhotoImage(file=self.icon_path)
         self.parent.iconphoto(True, icon_image)
         
         self.stworz_pole_tekstowe()
         self.stworz_przyciski()
     
     def stworz_pole_tekstowe(self):
-        self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20), bg="lightgrey")
+        self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20), bg="#F5F5F5")
         self.rezultat.grid(columnspan=5, pady=10)
         self.wynik = ""
         
@@ -83,12 +88,21 @@ class ClockFrame(tk.Frame):
         
         self.configure(bg="white")
         
-        self.inicialize_analog_clock()        
-               
+        self.clock = ""
+        self.choose_clock(self.clock)     
+    
+    def choose_clock(self, clock: str):
+        for widget in self.winfo_children():
+            widget.destroy()
+        
+        if clock == "analog":
+            self.inicialize_analog_clock()   
+        else:   
+            self.inicialize_digital_clock()         
                           
     ### DIGITAL CLOCK FUNCTIONS
     def inicialize_digital_clock(self):
-        self.digitalTimer = tk.Label(self, font=('calibri', 30, 'bold'), foreground='black')
+        self.digitalTimer = tk.Label(self, font=('calibri', 30, 'bold'), foreground='black', bg="white")
         self.digitalTimer.pack(pady=20)
         self.update_digital_timer()
     
@@ -118,7 +132,7 @@ class ClockFrame(tk.Frame):
     
     def create_clock_face(self):
         try:
-            self.clockFaceImg = tk.PhotoImage(file="img/clock150.png")
+            self.clockFaceImg = tk.PhotoImage(file=main_frame.image_path)
             self.clockCanvas.create_image(self.x, self.y, image=self.clockFaceImg)   
         except tk.TclError as e:
             print(f"Error loading image: {e}")
@@ -169,30 +183,55 @@ class MenuBar(tk.Menu):
         skin_menu = tk.Menu(options_menu, tearoff=0)
         skin_menu.add_command(label="White", command=self.change_skin_white)
         skin_menu.add_command(label="Sky", command=self.change_skin_lightblue)
+        skin_menu.add_command(label="Dark", command=self.change_skin_dark)
         
-        options_menu.add_cascade(label="Change Skin", menu=skin_menu)
+        clock_menu = tk.Menu(options_menu, tearoff=0)
+        clock_menu.add_command(label="Analog clock", command=self.change_clock_analog)
+        clock_menu.add_command(label="Digital clock", command=self.change_clock_digital)
+        
+        options_menu.add_cascade(label="Change skin", menu=skin_menu)
+        options_menu.add_cascade(label="Change clock", menu=clock_menu)
         options_menu.add_separator()
         options_menu.add_command(label="Exit", command=self.exit_app)
         
         self.add_cascade(label="Options", menu=options_menu)
-
+        
     def change_skin_lightblue(self):
         self.parent.configure(bg="lightblue")
         clock_frame.configure(bg="lightblue")
         main_frame.configure(bg="lightblue")
         main_frame.change_button_color("white")
         main_frame.rezultat.configure(bg="white")
-        
-        messagebox.showinfo("Skin Changed", "The skin has been changed to Lightblue!")
+        clock_frame.digitalTimer.configure(bg="lightblue", foreground="white")
+        messagebox.showinfo("Skin Changed", "The skin has been changed to Sky!")
 
     def change_skin_white(self):
         self.parent.configure(bg="white")
         clock_frame.configure(bg="white")
         main_frame.configure(bg="white")
+        main_frame.change_button_color("#F5F5F5")
+        main_frame.rezultat.configure(bg="#F5F5F5")
+        clock_frame.digitalTimer.configure(bg="white", foreground="black")
+        messagebox.showinfo("Skin Changed", "The skin has been changed to White!")
+        
+    def change_skin_dark(self):
+        self.parent.configure(bg="gray10")
+        clock_frame.configure(bg="gray10")
+        main_frame.configure(bg="gray10")
         main_frame.change_button_color("lightgrey")
         main_frame.rezultat.configure(bg="lightgrey")
+        clock_frame.digitalTimer.configure(bg="gray10", foreground="lightgrey")
+        messagebox.showinfo("Skin Changed", "The skin has been changed to Dark!")
         
-        messagebox.showinfo("Skin Changed", "The skin has been changed to White!")
+    def change_clock_analog(self):
+        clock_frame.clock = "analog"
+        clock_frame.choose_clock(clock_frame.clock)
+        messagebox.showinfo("Clock Changed", "The clock has been changed to analog!")
+    
+    def change_clock_digital(self):
+        clock_frame.clock = "digital"
+        clock_frame.choose_clock(clock_frame.clock)
+        messagebox.showinfo("Clock Changed", "The clock has been changed to digital!")
     
     def exit_app(self):
         self.parent.quit()
@@ -213,7 +252,7 @@ if __name__ == "__main__":
     main_frame.pack(side="left", padx=10, anchor="n")
 
     clock_frame = ClockFrame(root)
-    clock_frame.pack(side="right", padx=10, anchor="n")
+    clock_frame.pack(side="right", padx=(10,20), anchor="n")
 
     MenuBar(root)
         
