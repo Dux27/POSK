@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 from time import *
 import math
@@ -12,13 +13,16 @@ class MainFrame(tk.Frame):
         self.parent.title("Kalkulator")  
         self.parent.geometry("520x365")  
         self.parent.resizable(False, False)
+        self.parent.configure(bg="white")
+        self.configure(bg="white")
         
-        self.wynik = ""
-        
+        self.stworz_pole_tekstowe()
+        self.stworz_przyciski()
+    
+    def stworz_pole_tekstowe(self):
         self.rezultat = tk.Text(self, height=2, width=17, font=("Arial Black", 20))
         self.rezultat.grid(columnspan=5, pady=10)
-        
-        self.stworz_przyciski()
+        self.wynik = ""
         
     def stworz_przyciski(self):
         przyciski = [
@@ -67,6 +71,8 @@ class ClockFrame(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         
+        self.configure(bg="white")
+        
         self.inicialize_analog_clock()        
                
                           
@@ -97,7 +103,7 @@ class ClockFrame(tk.Frame):
         self.update_analog_timer()
     
     def create_clock_canvas(self):
-        self.clockCanvas = tk.Canvas(self, height=self.canvas_size, width=self.canvas_size)
+        self.clockCanvas = tk.Canvas(self, height=self.canvas_size, width=self.canvas_size, background="white")
         self.clockCanvas.pack(pady=8)
     
     def create_clock_face(self):
@@ -137,6 +143,49 @@ class ClockFrame(tk.Frame):
         self.clockCanvas.after(1000, self.update_analog_timer) # Update the position of the stick (clock hand) on the canvas
 
 
+class MenuBar(tk.Menu):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+        
+        self.create_options_menu()
+        self.create_help_menu()
+        
+        self.parent.config(menu=self)
+
+    def create_options_menu(self):
+        options_menu = tk.Menu(self, tearoff=0)
+        
+        skin_menu = tk.Menu(options_menu, tearoff=0)
+        skin_menu.add_command(label="Night mode", command=self.change_skin_dark)
+        skin_menu.add_command(label="Light mode", command=self.change_skin_light)
+        
+        options_menu.add_cascade(label="Change Skin", menu=skin_menu)
+        options_menu.add_separator()
+        options_menu.add_command(label="Exit", command=self.exit_app)
+        
+        self.add_cascade(label="Options", menu=options_menu)
+
+    def change_skin_dark(self):
+        self.parent.configure(bg="black")
+        messagebox.showinfo("Skin Changed", "The skin has been changed to Night Mode!")
+
+    def change_skin_light(self):
+        self.parent.configure(bg="white")
+        messagebox.showinfo("Skin Changed", "The skin has been changed to Light Mode!")
+    
+    def exit_app(self):
+        self.parent.quit()
+
+    def create_help_menu(self):
+        help_menu = tk.Menu(self, tearoff=0)
+        help_menu.add_command(label="About", command=self.show_about)
+        self.add_cascade(label="Help", menu=help_menu)
+    
+    def show_about(self):
+        messagebox.showinfo("About", "This is a simple calculator with a clock. Created with Tkinter. \nYou can choose skin and change type of the clock via options")
+
+
 if __name__ == "__main__":
     root = tk.Tk() 
     
@@ -145,5 +194,7 @@ if __name__ == "__main__":
 
     clock_frame = ClockFrame(root)
     clock_frame.pack(side="right", padx=10, anchor="n")
-    
+
+    MenuBar(root)
+        
     root.mainloop()
