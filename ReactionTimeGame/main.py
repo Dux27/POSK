@@ -1,6 +1,7 @@
 import pygame
-import matplotlib.pyplot as plt
+
 import tests
+import statistics
 
 pygame.init()
 WINDOW_WIDTH = 800
@@ -12,6 +13,7 @@ FONT = pygame.font.Font(None, 36)
 BACKGROUND_COLOR = (30, 30, 30)
 BUTTON_COLOR = (70, 130, 180)
 TEXT_COLOR = (255, 255, 255)
+GAME_DURATION = 2
 
 
 def draw_button(text, x, y, width=200, height=50):
@@ -48,21 +50,32 @@ def main_menu():
                 exit()  
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if test_button_rect.collidepoint(event.pos):
-                    tests.test_reaction() 
+                    tests.random_position()                         
+                    end_screen()
                     running = False
                 elif exit_button_rect.collidepoint(event.pos):
                     pygame.quit()
                     exit() 
+                    
+def end_screen():
+    statistics.simpleAnalysis(tests.reaction_times)
+    
+    back_button_rect = draw_button("Powrót do menu", WINDOW_WIDTH // 2 - 150, WINDOW_HEIGHT // 2 + 100, width=300)
+    plot_button_rect = draw_button("Analiza Analityczna", WINDOW_WIDTH // 2 - 150, WINDOW_HEIGHT // 2 + 170, width=300)
+    pygame.display.flip()
 
-
-def plot_results(reaction_times):
-    plt.figure(figsize=(10, 6))
-    plt.plot(range(1, len(reaction_times) + 1), reaction_times, marker='o', color='b')
-    plt.title("Czas reakcji w poszczególnych próbach")
-    plt.xlabel("Numer próby")
-    plt.ylabel("Czas reakcji (s)")
-    plt.grid(True)
-    plt.show()
+    waiting_for_exit = True
+    while waiting_for_exit:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit() 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button_rect.collidepoint(event.pos):
+                    waiting_for_exit = False 
+                    main_menu() 
+                elif plot_button_rect.collidepoint(event.pos):
+                    statistics.linearGraph(tests.reaction_times)
 
 
 def main():
