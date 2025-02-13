@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Test reakcji")
 
 # Load a sound effect for the audio test
-sound_file = "ReactionTimeGame\\sound.wav"
+sound_file = "ReactionTimeGame_2\\sound.wav"
 if os.path.exists(sound_file):
     audio_sound = pygame.mixer.Sound(sound_file)
 else:
@@ -25,9 +25,9 @@ else:
     audio_sound = None
 
 # Load animal images (replace with actual paths to your images)
-cheetah_img = pygame.image.load("ReactionTimeGame\\cheetah.png")  # Cheetah image
-rabbit_img = pygame.image.load("ReactionTimeGame\\rabbit.png")  # Rabbit image
-elephant_img = pygame.image.load("ReactionTimeGame\\elephant.png")  # Elephant image
+cheetah_img = pygame.image.load("ReactionTimeGame_2\\cheetah.png")  # Cheetah image
+rabbit_img = pygame.image.load("ReactionTimeGame_2\\rabbit.png")  # Rabbit image
+elephant_img = pygame.image.load("ReactionTimeGame_2\\elephant.png")  # Elephant image
 
 def draw_button(text, x, y):
     button_width = 200
